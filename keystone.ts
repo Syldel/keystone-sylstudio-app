@@ -25,5 +25,12 @@ export default withAuth(
     },
     lists,
     session,
+    ui: {
+      // only admins can view the AdminUI
+      isAccessAllowed: ({ session }) => {
+        console.log('ui isAccessAllowed', session?.data?.isAdmin ?? false);
+        return session?.data?.isAdmin ?? false;
+      },
+    },
   })
 );

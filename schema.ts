@@ -6,7 +6,7 @@
 // - https://keystonejs.com/docs/config/lists
 
 import { list } from '@keystone-6/core';
-import { allowAll } from '@keystone-6/core/access';
+import { allowAll, unfiltered } from '@keystone-6/core/access';
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
@@ -27,13 +27,53 @@ import { document } from '@keystone-6/fields-document';
 // the generated types from '.keystone/types'
 import type { Lists } from '.keystone/types';
 
+/* ************************************************************************************* */
+export type Session = {
+  listKey: string,
+  itemId: string,
+  data?: {
+    isAdmin: boolean;
+  }
+};
+
+function hasSession({ session }: { session?: Session }): boolean {
+  console.log('hasSession', Boolean(session));
+  return Boolean(session);
+}
+
+function isAdmin({ session }: { session?: Session }): boolean {
+  console.log('isAdmin', Boolean(session?.data?.isAdmin));
+  return Boolean(session?.data?.isAdmin);
+}
+
+function isAdminOrOnlySameUser({ session }: { session?: Session }) {
+  if (!session) return false;
+  if (session?.data?.isAdmin) return {}; // unfiltered for admins
+  return {
+    id: { equals: session.itemId },
+  };
+}
+/* ************************************************************************************* */
+
 export const lists: Lists = {
   User: list({
     // WARNING
     //   for this starter project, anyone can create, query, update and delete anything
     //   if you want to prevent random people on the internet from accessing your data,
     //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
-    access: allowAll,
+    //access: allowAll,
+
+    access: {
+      operation: {
+        query: hasSession,
+        create: isAdmin,
+        update: isAdmin,
+        delete: isAdmin,
+      },
+      filter: {
+        query: isAdminOrOnlySameUser,
+      },
+    },
 
     // this is the fields for our User list
     fields: {
@@ -68,7 +108,21 @@ export const lists: Lists = {
     //   for this starter project, anyone can create, query, update and delete anything
     //   if you want to prevent random people on the internet from accessing your data,
     //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
-    access: allowAll,
+    //access: allowAll,
+
+    access: {
+      operation: {
+        query: allowAll,
+        create: isAdmin,
+        update: isAdmin,
+        delete: isAdmin,
+      },
+      filter: {
+        // this is redundant as it is the default
+        //   but it may help readability
+        query: unfiltered,
+      },
+    },
 
     // this is the fields for our Post list
     fields: {
@@ -135,7 +189,21 @@ export const lists: Lists = {
     //   for this starter project, anyone can create, query, update and delete anything
     //   if you want to prevent random people on the internet from accessing your data,
     //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
-    access: allowAll,
+    //access: allowAll,
+
+    access: {
+      operation: {
+        query: allowAll,
+        create: isAdmin,
+        update: isAdmin,
+        delete: isAdmin,
+      },
+      filter: {
+        // this is redundant as it is the default
+        //   but it may help readability
+        query: unfiltered,
+      },
+    },
 
     // setting this to isHidden for the user interface prevents this list being visible in the Admin UI
     ui: {
