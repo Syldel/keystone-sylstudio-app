@@ -7,12 +7,13 @@
     "npm": "8.5.5"
   },
   "scripts": {
-    "prestart": "npm run build",
     "dev": "keystone dev",
-    "start": "keystone start",
+    "generate": "keystone prisma migrate dev",
+    "start": "keystone start --with-migrations",
+    "deploy": "keystone build && keystone prisma migrate deploy",
     "build": "keystone build",
     "postinstall": "keystone build --no-ui --frozen",
-    "heroku-postbuild": "echo The build will be done at prestart"
+    "heroku-postbuild": "npm run deploy"
   },
   "dependencies": {
     "@keystone-6/auth": "^7.0.0",
