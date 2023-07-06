@@ -81,8 +81,37 @@ async function fetchPosts() {
 - Il faut être en https (Ou mettre secure de statelessSessions à false)
   D'une manière générale, étudier de près la configuration de statelessSessions pour la sécurité en production.
 
-Use CURL like this :
+### CURL et GraphQL
+
+Exemple de requête CURL pour récupérer des données GraphQL :
 
 ```
-curl -i -X POST -H "Content-Type:application/json" -d "{\"query\":\"query Posts {posts{id}}\"}" https://admin.syl-studio.com/api/graphql
+curl -i -X POST -H "Content-Type:application/json" -d "{\"query\":\"query Posts {posts{id}}\"}" http://localhost:3000/api/graphql
+```
+
+### Amazon S3 - Accès public
+
+https://keystonejs.com/docs/guides/images-and-files
+
+1. Se connecter à AWS
+2. Créer Utilisateur IAM avec "Clé d'accès" et "Politiques des autorisations" avec AmazonS3FullAccess
+   https://console.aws.amazon.com/iamv2
+3. - Créer un bucket S3 et dans "Autorisations"
+     https://console.aws.amazon.com/s3/
+   - Décocher "Bloquer tous les accès publics"
+   - Dans "Stratégie de compartiment", définissez le code suivant :
+
+```
+   {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Allow-Public-Access-To-Bucket",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::DOC-EXAMPLE-BUCKET/*"
+        }
+    ]
+}
 ```

@@ -17,6 +17,7 @@ import {
   timestamp,
   select,
   checkbox,
+  image,
 } from '@keystone-6/core/fields';
 
 // the document field is a more complicated field, so it has it's own package
@@ -197,6 +198,8 @@ export const lists: Lists = {
           inlineCreate: { fields: ['name'] },
         },
       }),
+
+      image: image({ storage: 'sylstudio_S3_images' })
     },
   }),
 

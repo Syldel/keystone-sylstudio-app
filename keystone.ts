@@ -14,6 +14,8 @@ import { lists } from './schema';
 // when you write your list-level access control functions, as they typically rely on session data
 import { withAuth, session } from './auth';
 
+import { storage } from './storage';
+
 export default withAuth(
   config({
     db: {
@@ -28,9 +30,9 @@ export default withAuth(
     ui: {
       // only admins can view the AdminUI
       isAccessAllowed: ({ session }) => {
-        console.log('ui isAccessAllowed', JSON.stringify(session));
         return session?.data?.isAdmin ?? false;
       },
     },
+    storage
   })
 );
