@@ -28,7 +28,7 @@ export default withAuth(
     ui: {
       // only admins can view the AdminUI
       isAccessAllowed: ({ session }) => {
-        console.log('ui isAccessAllowed', session?.data?.isAdmin ?? false);
+        console.log('ui isAccessAllowed', JSON.stringify(session));
         return session?.data?.isAdmin ?? false;
       },
     },

@@ -31,36 +31,56 @@ import type { Lists } from '.keystone/types';
 export type Session = {
   listKey: string,
   itemId: string,
-  data?: {
+  data: {
     isAdmin: boolean;
   }
 };
 
-function hasSession({ session }: { session?: Session }): boolean {
-  console.log('hasSession', Boolean(session));
+function hasSession({ session }: { session?: Session }) {
   return Boolean(session);
 }
 
-function isAdmin({ session }: { session?: Session }): boolean {
-  console.log('isAdmin', Boolean(session?.data?.isAdmin));
-  return Boolean(session?.data?.isAdmin);
+function isAdminOrSameUser({ session, item }: { session?: Session; item: Lists.User.Item }) {
+  // you need to have a session to do this
+  if (!session) return false;
+
+  // admins can do anything
+  if (session.data.isAdmin) return true;
+
+  // the authenticated user needs to be equal to the user we are updating
+  return session.itemId === item.id;
 }
 
-function isAdminOrOnlySameUser({ session }: { session?: Session }) {
+function isAdminOrSameUserFilter({ session }: { session?: Session }) {
+  // you need to have a session to do this
   if (!session) return false;
-  if (session?.data?.isAdmin) return {}; // unfiltered for admins
+
+  // admins can see everything
+  if (session.data?.isAdmin) return {};
+
+  // the authenticated user can only see themselves
   return {
-    id: { equals: session.itemId },
+    id: {
+      equals: session.itemId,
+    },
   };
+}
+
+function isAdmin({ session }: { session?: Session }) {
+  // you need to have a session to do this
+  if (!session) return false;
+
+  // admins can do anything
+  if (session.data.isAdmin) return true;
+
+  // otherwise, no
+  return false;
 }
 /* ************************************************************************************* */
 
 export const lists: Lists = {
   User: list({
-    // WARNING
-    //   for this starter project, anyone can create, query, update and delete anything
-    //   if you want to prevent random people on the internet from accessing your data,
-    //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
+    // More about access at https://keystonejs.com/docs/guides/auth-and-access-control
     //access: allowAll,
 
     access: {
@@ -71,7 +91,7 @@ export const lists: Lists = {
         delete: isAdmin,
       },
       filter: {
-        query: isAdminOrOnlySameUser,
+        query: isAdminOrSameUserFilter,
       },
     },
 
@@ -104,10 +124,7 @@ export const lists: Lists = {
   }),
 
   Post: list({
-    // WARNING
-    //   for this starter project, anyone can create, query, update and delete anything
-    //   if you want to prevent random people on the internet from accessing your data,
-    //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
+    // More about access at https://keystonejs.com/docs/guides/auth-and-access-control
     //access: allowAll,
 
     access: {
@@ -185,10 +202,7 @@ export const lists: Lists = {
 
   // this last list is our Tag list, it only has a name field for now
   Tag: list({
-    // WARNING
-    //   for this starter project, anyone can create, query, update and delete anything
-    //   if you want to prevent random people on the internet from accessing your data,
-    //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
+    // More about access at https://keystonejs.com/docs/guides/auth-and-access-control
     //access: allowAll,
 
     access: {
