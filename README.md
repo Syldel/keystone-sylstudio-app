@@ -1,18 +1,10 @@
-# Keystone Project Starter
-
-Welcome to Keystone!
+# Keystone Syl-Studio Backoffice
 
 Run
 
 ```
 yarn dev
 ```
-
-To view the config for your new app, look at [./keystone.ts](./keystone.ts)
-
-This project starter is designed to give you a sense of the power Keystone can offer you, and show off some of its main features. It's also a pretty simple setup if you want to build out from it.
-
-We recommend you use this alongside our [getting started walkthrough](https://keystonejs.com/docs/walkthroughs/getting-started-with-create-keystone-app) which will walk you through what you get as part of this starter.
 
 If you want an overview of all the features Keystone offers, check out our [features](https://keystonejs.com/why-keystone#features) page.
 
@@ -47,6 +39,50 @@ As a Headless CMS, Keystone can be used with any frontend that uses GraphQL. It 
 
 A walkthrough on how to do this is forthcoming, but in the meantime our [todo example](https://github.com/keystonejs/keystone-react-todo-demo) shows a Keystone set up with a frontend. For a more full example, you can also look at an example app we built for [Prisma Day 2021](https://github.com/keystonejs/prisma-day-2021-workshop)
 
-### Embedding Keystone in a Next.js frontend
+### fetch API javascript example
 
-While Keystone works as a standalone app, you can embed your Keystone app into a [Next.js](https://nextjs.org/) app. This is quite a different setup to the starter, and we recommend checking out our walkthrough for that [here](https://keystonejs.com/docs/walkthroughs/embedded-mode-with-sqlite-nextjs#how-to-embed-keystone-sq-lite-in-a-next-js-app).
+```
+const GRAPHQL_URL = 'https://admin.syl-studio.com/api/graphql';
+
+async function fetchPosts() {
+  const response = await fetch(GRAPHQL_URL, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `
+        query Posts{
+          posts{id, title
+            content {
+              document
+            }
+            tags {
+              id
+            }
+          }
+        }
+      `,
+    }),
+  });
+  const responseBody = await response.json();
+
+  if (responseBody?.data?.posts) {
+    console.log('=====> fetchPosts() data?.posts:', responseBody?.data?.posts);
+  } else {
+    console.log('=====> fetchPosts():', responseBody);
+  }
+}
+```
+
+### Production
+
+- Il faut définir la variable d'environnement SESSION_SECRET (32 digits) (https://www.browserling.com/tools/random-hex)
+- Il faut être en https (Ou mettre secure de statelessSessions à false)
+  D'une manière générale, étudier de près la configuration de statelessSessions pour la sécurité en production.
+
+Use CURL like this :
+
+```
+curl -i -X POST -H "Content-Type:application/json" -d "{\"query\":\"query Posts {posts{id}}\"}" https://admin.syl-studio.com/api/graphql
+```
