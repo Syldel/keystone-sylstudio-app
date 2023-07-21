@@ -7,15 +7,18 @@
     "npm": "8.5.5"
   },
   "scripts": {
-    "dev": "keystone dev",
+    "dev": "npm run s3-get-db && keystone dev",
     "generate": "keystone prisma migrate dev",
-    "start": "keystone start --with-migrations",
+    "start": "npm run s3-get-db && keystone start --with-migrations",
     "deploy": "keystone build && keystone prisma migrate deploy",
     "build": "keystone build",
     "postinstall": "keystone build --no-ui --frozen",
-    "heroku-postbuild": "npm run deploy"
+    "heroku-postbuild": "npm run deploy",
+    "s3-get-db": "tsc aws/s3-get-database.ts --module commonjs --esModuleInterop && node aws/s3-get-database.js",
+    "s3-put-db": "tsc aws/s3-put-database.ts --module commonjs --esModuleInterop && node aws/s3-put-database.js"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.363.0",
     "@keystone-6/auth": "^7.0.0",
     "@keystone-6/core": "^5.0.0",
     "@keystone-6/fields-document": "^7.0.0",

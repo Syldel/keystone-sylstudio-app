@@ -2,18 +2,11 @@
 
 import { StorageConfig } from "@keystone-6/core/types";
 
-require('dotenv').config()
+import { s3Config, bucketName } from "./aws/s3-client";
 
-const {
-  S3_BUCKET_NAME: bucketName = '',
-  S3_REGION: region = '',
-  S3_ACCESS_KEY_ID: accessKeyId = '',
-  S3_SECRET_ACCESS_KEY: secretAccessKey = '',
-} = process.env;
-
-if (!bucketName || !region || !accessKeyId || !secretAccessKey) {
-  console.warn('YOU MUST DEFINE S3 ENVIRONMENT VARIABLES!');
-}
+const region = s3Config.region;
+const accessKeyId = s3Config.credentials.accessKeyId;
+const secretAccessKey = s3Config.credentials.secretAccessKey;
 
 export const storage: Record<string, StorageConfig> = {
   sylstudio_S3_images: {
