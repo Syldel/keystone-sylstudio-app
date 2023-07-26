@@ -152,6 +152,7 @@ type Post {
   tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
   image: ImageFieldOutput
+  blurhash: String
 }
 
 type Post_content_Document {
@@ -186,6 +187,7 @@ input PostWhereInput {
   title: StringFilter
   author: UserWhereInput
   tags: TagManyRelationFilter
+  blurhash: StringFilter
 }
 
 input TagManyRelationFilter {
@@ -197,6 +199,7 @@ input TagManyRelationFilter {
 input PostOrderByInput {
   id: OrderDirection
   title: OrderDirection
+  blurhash: OrderDirection
 }
 
 input PostUpdateInput {
@@ -205,6 +208,7 @@ input PostUpdateInput {
   author: UserRelateToOneForUpdateInput
   tags: TagRelateToManyForUpdateInput
   image: ImageFieldInput
+  blurhash: String
 }
 
 input UserRelateToOneForUpdateInput {
@@ -238,6 +242,7 @@ input PostCreateInput {
   author: UserRelateToOneForCreateInput
   tags: TagRelateToManyForCreateInput
   image: ImageFieldInput
+  blurhash: String
 }
 
 input UserRelateToOneForCreateInput {

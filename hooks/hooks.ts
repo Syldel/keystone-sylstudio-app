@@ -1,7 +1,7 @@
 // Documentation : https://keystonejs.com/docs/guides/hooks
 
 import { ListHooks } from "@keystone-6/core/types";
-import { getS3File, putS3File, writeS3File } from "./aws/s3-functions";
+import { getS3File, putS3File, writeS3File } from "../aws/s3-functions";
 
 const filePath = '../keystone.db';
 const fileKey = 'keystone.db';

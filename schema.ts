@@ -27,7 +27,8 @@ import { document } from '@keystone-6/fields-document';
 // when using Typescript, you can refine your types to a stricter subset by importing
 // the generated types from '.keystone/types'
 import type { Lists } from '.keystone/types';
-import { hooks } from './hooks';
+import { hooks } from './hooks/hooks';
+import { postHooks } from './hooks/post-hooks';
 
 /* ************************************************************************************* */
 export type Session = {
@@ -202,10 +203,14 @@ export const lists: Lists = {
         },
       }),
 
-      image: image({ storage: 'sylstudio_S3_images' })
+      image: image({ storage: 'sylstudio_S3_images' }),
+
+      blurhash: text()
     },
 
-    hooks,
+    hooks: {
+      ...hooks, ...postHooks
+    },
   }),
 
   // this last list is our Tag list, it only has a name field for now
