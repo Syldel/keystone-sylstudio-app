@@ -34,6 +34,10 @@ model Post {
   image_height    Int?
   image_id        String?
   blurhash        String  @default("")
+  image_40        String  @default("")
+  image_150       String  @default("")
+  image_300       String  @default("")
+  image_600       String  @default("")
 
   @@index([authorId])
 }

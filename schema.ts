@@ -205,7 +205,12 @@ export const lists: Lists = {
 
       image: image({ storage: 'sylstudio_S3_images' }),
 
-      blurhash: text()
+      blurhash: text(),
+
+      image_40: text(),
+      image_150: text(),
+      image_300: text(),
+      image_600: text(),
     },
 
     hooks: {

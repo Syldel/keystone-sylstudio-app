@@ -4,7 +4,10 @@ import type { ReadStream } from 'fs';
 
 import { ListHooks } from "@keystone-6/core/types";
 
+import { deleteS3File } from "../aws/s3-functions";
+
 import { encodeImageToBlurhash, readStreamChunks } from "./blurhash";
+import { resizeImage } from "./resize-image";
 
 type FileUpload = {
   filename: string;
@@ -14,24 +17,62 @@ type FileUpload = {
 };
 
 export const postHooks: ListHooks<any> = {
-  resolveInput: async ({ inputData, resolvedData }) => {
+  resolveInput: async ({ inputData, item, resolvedData }) => {
+    // Info: "listKey" gives something like "Post"
     const { image: inputImage } = inputData;
 
     if (inputImage) {
       const imageUploadData: FileUpload = await inputImage.upload;
       const chunks = await readStreamChunks(imageUploadData.createReadStream());
+      const buffer = Buffer.concat(chunks);
 
       let blurhash = '';
       try {
-        blurhash = await encodeImageToBlurhash(Buffer.concat(chunks));
+        blurhash = await encodeImageToBlurhash(buffer);
       } catch (err) {
         console.error("blurhash encode error:", err);
       }
 
-      return {
+      // VERY IMPORTANT : Need to define sizes here!
+      const resizeSizes = [40, 150, 300, 600]; // According schema.ts definitions
+
+      // Delete previous resized images
+      const deleteResizePromises: Promise<any>[] = [];
+      resizeSizes.forEach(size => {
+        if (item[`image_${size}`]) {
+          deleteResizePromises.push(deleteS3File(item[`image_${size}`]));
+        }
+      });
+
+      try {
+        await Promise.all(deleteResizePromises);
+      } catch (err) {
+        console.error("deleteS3File promise error:", err); // Promise.all has at least one rejection
+      }
+
+      // Create resized images
+      const resizePromises: Promise<string>[] = [];
+      resizeSizes.forEach(size => {
+        resizePromises.push(resizeImage(buffer, size, resolvedData.image.id));
+      });
+
+      let resizeResults: string[] = [];
+      try {
+        resizeResults = await Promise.all(resizePromises);
+      } catch (err) {
+        console.error("resizeImage error:", err); // Promise.all has at least one rejection
+      }
+
+      const dataToReturn = {
         ...resolvedData,
         blurhash
-      }
+      };
+
+      resizeSizes.forEach((size, index) => {
+        dataToReturn[`image_${size}`] = resizeResults[index];
+      });
+
+      return dataToReturn;
     }
 
     /*

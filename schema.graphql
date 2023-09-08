@@ -153,6 +153,10 @@ type Post {
   tagsCount(where: TagWhereInput! = {}): Int
   image: ImageFieldOutput
   blurhash: String
+  image_40: String
+  image_150: String
+  image_300: String
+  image_600: String
 }
 
 type Post_content_Document {
@@ -188,6 +192,10 @@ input PostWhereInput {
   author: UserWhereInput
   tags: TagManyRelationFilter
   blurhash: StringFilter
+  image_40: StringFilter
+  image_150: StringFilter
+  image_300: StringFilter
+  image_600: StringFilter
 }
 
 input TagManyRelationFilter {
@@ -200,6 +208,10 @@ input PostOrderByInput {
   id: OrderDirection
   title: OrderDirection
   blurhash: OrderDirection
+  image_40: OrderDirection
+  image_150: OrderDirection
+  image_300: OrderDirection
+  image_600: OrderDirection
 }
 
 input PostUpdateInput {
@@ -209,6 +221,10 @@ input PostUpdateInput {
   tags: TagRelateToManyForUpdateInput
   image: ImageFieldInput
   blurhash: String
+  image_40: String
+  image_150: String
+  image_300: String
+  image_600: String
 }
 
 input UserRelateToOneForUpdateInput {
@@ -243,6 +259,10 @@ input PostCreateInput {
   tags: TagRelateToManyForCreateInput
   image: ImageFieldInput
   blurhash: String
+  image_40: String
+  image_150: String
+  image_300: String
+  image_600: String
 }
 
 input UserRelateToOneForCreateInput {

@@ -42,7 +42,7 @@ A walkthrough on how to do this is forthcoming, but in the meantime our [todo ex
 ### fetch API javascript example
 
 ```
-const GRAPHQL_URL = 'https://admin.syl-studio.com/api/graphql';
+const GRAPHQL_URL = 'http://localhost:3000/api/graphql';
 
 async function fetchPosts() {
   const response = await fetch(GRAPHQL_URL, {

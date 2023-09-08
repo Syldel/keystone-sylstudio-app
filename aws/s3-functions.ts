@@ -1,4 +1,4 @@
-import { PutObjectCommand, GetObjectCommand, ListObjectsCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
+import { PutObjectCommand, GetObjectCommand, ListObjectsCommand, GetObjectCommandOutput, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { s3Client, bucketName } from "./s3-client.js";
 import path from "path";
 import { readFileSync, writeFileSync } from "fs";
@@ -13,12 +13,16 @@ const putS3File = async (filePath: string, fileKey = 'filename') => {
     return;
   }
 
+  return await putS3Buffer(fileContent, fileKey);
+}
+
+const putS3Buffer = async (fileContent: Buffer, fileKey: string) => {
   const params = {
     Bucket: bucketName, // required
     Key: fileKey, // required
     Body: fileContent,
     // CacheControl: 'max-age=604800',
-    Tagging: "type=database",
+    // Tagging: "type=database",
   };
 
   // Create an object and upload it to the Amazon S3 bucket.
@@ -26,8 +30,6 @@ const putS3File = async (filePath: string, fileKey = 'filename') => {
     const results = await s3Client.send(new PutObjectCommand(params));
     console.log(
       "S3 PutObjectCommand - Successfully created " +
-      params.Key +
-      " and uploaded it to " +
       params.Bucket +
       "/" +
       params.Key
@@ -90,4 +92,25 @@ const writeS3File = async (filePath: string, object: GetObjectCommandOutput) => 
   }
 }
 
-export { putS3File, getS3File, getS3List, writeS3File };
+const deleteS3File = async (key: string) => {
+  const input = {
+    Bucket: bucketName, // required
+    Key: key, // required
+  };
+
+  try {
+    const result = await s3Client.send(new DeleteObjectCommand(input));
+    console.log(
+      "S3 DeleteObjectCommand - Success : " +
+      input.Bucket +
+      "/" +
+      input.Key
+    );
+
+    return result;
+  } catch (err) {
+    console.error("S3 DeleteObjectCommand error:", err);
+  }
+}
+
+export { putS3Buffer, putS3File, getS3File, getS3List, writeS3File, deleteS3File };

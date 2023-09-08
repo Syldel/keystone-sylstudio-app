@@ -1,6 +1,6 @@
 // Documentation : https://www.npmjs.com/package/blurhash
 
-const sharp = require("sharp");
+import sharp from "sharp";
 import { encode } from "blurhash";
 
 import type { Readable } from 'stream';
@@ -16,7 +16,7 @@ const readStreamChunks = (createReadStream: Readable): Promise<any[]> =>
       });
   });
 
-const encodeImageToBlurhash = (src: any): Promise<string> =>
+const encodeImageToBlurhash = (src: Buffer): Promise<string> =>
   new Promise((resolve, reject) => {
     sharp(src)
       .raw()
