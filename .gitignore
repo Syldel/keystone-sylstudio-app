@@ -1,5 +1,5 @@
 node_modules
-.keystone/admin
+.keystone
 *.log
 .env
 aws/*.js
