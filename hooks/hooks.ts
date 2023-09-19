@@ -8,9 +8,15 @@ const fileKey = 'keystone.db';
 
 export const hooks: ListHooks<any> = {
   beforeOperation: async ({ operation }) => {
-    const s3Object = await getS3File(fileKey);
-    if (s3Object) {
-      await writeS3File(filePath, s3Object);
+    if (process.env.NODE_ENV !== 'production') {
+      // Development environment
+      console.log('Development environment => Skip beforeOperation getS3File', fileKey)
+    } else {
+      // Production environment
+      const s3Object = await getS3File(fileKey);
+      if (s3Object) {
+        await writeS3File(filePath, s3Object);
+      }
     }
   },
   afterOperation: async ({ operation }) => {
