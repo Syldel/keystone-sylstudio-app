@@ -79,6 +79,14 @@ function isAdmin({ session }: { session?: Session }) {
   // otherwise, no
   return false;
 }
+
+/* ************************************************************************************* */
+
+const dateMatch = {
+  regex: RegExp(/^((19|2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/),
+  explanation: "Cette date doit correspondre au format YYYY-MM-DD",
+};
+
 /* ************************************************************************************* */
 
 export const lists: Lists = {
@@ -163,6 +171,18 @@ export const lists: Lists = {
         ],
         links: true,
         dividers: true,
+      }),
+
+      startDate: text({
+        validation: {
+          match: dateMatch,
+        },
+      }),
+
+      endDate: text({
+        validation: {
+          match: dateMatch,
+        },
       }),
 
       // with this field, you can set a User as the author for a Post

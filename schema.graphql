@@ -148,6 +148,8 @@ type Post {
   id: ID!
   title: String
   content: Post_content_Document
+  startDate: String
+  endDate: String
   author: User
   tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
@@ -189,6 +191,8 @@ input PostWhereInput {
   NOT: [PostWhereInput!]
   id: IDFilter
   title: StringFilter
+  startDate: StringFilter
+  endDate: StringFilter
   author: UserWhereInput
   tags: TagManyRelationFilter
   blurhash: StringFilter
@@ -207,6 +211,8 @@ input TagManyRelationFilter {
 input PostOrderByInput {
   id: OrderDirection
   title: OrderDirection
+  startDate: OrderDirection
+  endDate: OrderDirection
   blurhash: OrderDirection
   image_40: OrderDirection
   image_150: OrderDirection
@@ -217,6 +223,8 @@ input PostOrderByInput {
 input PostUpdateInput {
   title: String
   content: JSON
+  startDate: String
+  endDate: String
   author: UserRelateToOneForUpdateInput
   tags: TagRelateToManyForUpdateInput
   image: ImageFieldInput
@@ -255,6 +263,8 @@ input PostUpdateArgs {
 input PostCreateInput {
   title: String
   content: JSON
+  startDate: String
+  endDate: String
   author: UserRelateToOneForCreateInput
   tags: TagRelateToManyForCreateInput
   image: ImageFieldInput
