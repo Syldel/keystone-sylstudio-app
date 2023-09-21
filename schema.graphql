@@ -6,8 +6,6 @@ type User {
   name: String
   email: String
   password: PasswordState
-  posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PostWhereUniqueInput): [Post!]
-  postsCount(where: PostWhereInput! = {}): Int
   createdAt: DateTime
   isAdmin: Boolean
 }
@@ -30,7 +28,6 @@ input UserWhereInput {
   id: IDFilter
   name: StringFilter
   email: StringFilter
-  posts: PostManyRelationFilter
   createdAt: DateTimeNullableFilter
   isAdmin: BooleanFilter
 }
@@ -74,12 +71,6 @@ input NestedStringFilter {
   not: NestedStringFilter
 }
 
-input PostManyRelationFilter {
-  every: PostWhereInput
-  some: PostWhereInput
-  none: PostWhereInput
-}
-
 input DateTimeNullableFilter {
   equals: DateTime
   in: [DateTime!]
@@ -113,16 +104,8 @@ input UserUpdateInput {
   name: String
   email: String
   password: String
-  posts: PostRelateToManyForUpdateInput
   createdAt: DateTime
   isAdmin: Boolean
-}
-
-input PostRelateToManyForUpdateInput {
-  disconnect: [PostWhereUniqueInput!]
-  set: [PostWhereUniqueInput!]
-  create: [PostCreateInput!]
-  connect: [PostWhereUniqueInput!]
 }
 
 input UserUpdateArgs {
@@ -134,25 +117,18 @@ input UserCreateInput {
   name: String
   email: String
   password: String
-  posts: PostRelateToManyForCreateInput
   createdAt: DateTime
   isAdmin: Boolean
 }
 
-input PostRelateToManyForCreateInput {
-  create: [PostCreateInput!]
-  connect: [PostWhereUniqueInput!]
-}
-
-type Post {
+type Experience {
   id: ID!
   title: String
-  content: Post_content_Document
+  content: Experience_content_Document
   startDate: String
   endDate: String
-  author: User
-  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
-  tagsCount(where: TagWhereInput! = {}): Int
+  technos(where: TechnoWhereInput! = {}, orderBy: [TechnoOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TechnoWhereUniqueInput): [Techno!]
+  technosCount(where: TechnoWhereInput! = {}): Int
   image: ImageFieldOutput
   blurhash: String
   image_40: String
@@ -161,7 +137,7 @@ type Post {
   image_600: String
 }
 
-type Post_content_Document {
+type Experience_content_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
@@ -181,20 +157,19 @@ enum ImageExtension {
   gif
 }
 
-input PostWhereUniqueInput {
+input ExperienceWhereUniqueInput {
   id: ID
 }
 
-input PostWhereInput {
-  AND: [PostWhereInput!]
-  OR: [PostWhereInput!]
-  NOT: [PostWhereInput!]
+input ExperienceWhereInput {
+  AND: [ExperienceWhereInput!]
+  OR: [ExperienceWhereInput!]
+  NOT: [ExperienceWhereInput!]
   id: IDFilter
   title: StringFilter
   startDate: StringFilter
   endDate: StringFilter
-  author: UserWhereInput
-  tags: TagManyRelationFilter
+  technos: TechnoManyRelationFilter
   blurhash: StringFilter
   image_40: StringFilter
   image_150: StringFilter
@@ -202,13 +177,13 @@ input PostWhereInput {
   image_600: StringFilter
 }
 
-input TagManyRelationFilter {
-  every: TagWhereInput
-  some: TagWhereInput
-  none: TagWhereInput
+input TechnoManyRelationFilter {
+  every: TechnoWhereInput
+  some: TechnoWhereInput
+  none: TechnoWhereInput
 }
 
-input PostOrderByInput {
+input ExperienceOrderByInput {
   id: OrderDirection
   title: OrderDirection
   startDate: OrderDirection
@@ -220,13 +195,12 @@ input PostOrderByInput {
   image_600: OrderDirection
 }
 
-input PostUpdateInput {
+input ExperienceUpdateInput {
   title: String
   content: JSON
   startDate: String
   endDate: String
-  author: UserRelateToOneForUpdateInput
-  tags: TagRelateToManyForUpdateInput
+  technos: TechnoRelateToManyForUpdateInput
   image: ImageFieldInput
   blurhash: String
   image_40: String
@@ -235,17 +209,11 @@ input PostUpdateInput {
   image_600: String
 }
 
-input UserRelateToOneForUpdateInput {
-  create: UserCreateInput
-  connect: UserWhereUniqueInput
-  disconnect: Boolean
-}
-
-input TagRelateToManyForUpdateInput {
-  disconnect: [TagWhereUniqueInput!]
-  set: [TagWhereUniqueInput!]
-  create: [TagCreateInput!]
-  connect: [TagWhereUniqueInput!]
+input TechnoRelateToManyForUpdateInput {
+  disconnect: [TechnoWhereUniqueInput!]
+  set: [TechnoWhereUniqueInput!]
+  create: [TechnoCreateInput!]
+  connect: [TechnoWhereUniqueInput!]
 }
 
 input ImageFieldInput {
@@ -255,18 +223,17 @@ input ImageFieldInput {
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
-input PostUpdateArgs {
-  where: PostWhereUniqueInput!
-  data: PostUpdateInput!
+input ExperienceUpdateArgs {
+  where: ExperienceWhereUniqueInput!
+  data: ExperienceUpdateInput!
 }
 
-input PostCreateInput {
+input ExperienceCreateInput {
   title: String
   content: JSON
   startDate: String
   endDate: String
-  author: UserRelateToOneForCreateInput
-  tags: TagRelateToManyForCreateInput
+  technos: TechnoRelateToManyForCreateInput
   image: ImageFieldInput
   blurhash: String
   image_40: String
@@ -275,54 +242,102 @@ input PostCreateInput {
   image_600: String
 }
 
-input UserRelateToOneForCreateInput {
-  create: UserCreateInput
-  connect: UserWhereUniqueInput
+input TechnoRelateToManyForCreateInput {
+  create: [TechnoCreateInput!]
+  connect: [TechnoWhereUniqueInput!]
 }
 
-input TagRelateToManyForCreateInput {
-  create: [TagCreateInput!]
-  connect: [TagWhereUniqueInput!]
-}
-
-type Tag {
+type Techno {
   id: ID!
   name: String
-  posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PostWhereUniqueInput): [Post!]
-  postsCount(where: PostWhereInput! = {}): Int
+  content: Techno_content_Document
+  experiences(where: ExperienceWhereInput! = {}, orderBy: [ExperienceOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ExperienceWhereUniqueInput): [Experience!]
+  experiencesCount(where: ExperienceWhereInput! = {}): Int
+  image: ImageFieldOutput
+  blurhash: String
+  image_40: String
+  image_150: String
+  image_300: String
+  image_600: String
 }
 
-input TagWhereUniqueInput {
+type Techno_content_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input TechnoWhereUniqueInput {
   id: ID
 }
 
-input TagWhereInput {
-  AND: [TagWhereInput!]
-  OR: [TagWhereInput!]
-  NOT: [TagWhereInput!]
+input TechnoWhereInput {
+  AND: [TechnoWhereInput!]
+  OR: [TechnoWhereInput!]
+  NOT: [TechnoWhereInput!]
   id: IDFilter
   name: StringFilter
-  posts: PostManyRelationFilter
+  experiences: ExperienceManyRelationFilter
+  blurhash: StringFilter
+  image_40: StringFilter
+  image_150: StringFilter
+  image_300: StringFilter
+  image_600: StringFilter
 }
 
-input TagOrderByInput {
+input ExperienceManyRelationFilter {
+  every: ExperienceWhereInput
+  some: ExperienceWhereInput
+  none: ExperienceWhereInput
+}
+
+input TechnoOrderByInput {
   id: OrderDirection
   name: OrderDirection
+  blurhash: OrderDirection
+  image_40: OrderDirection
+  image_150: OrderDirection
+  image_300: OrderDirection
+  image_600: OrderDirection
 }
 
-input TagUpdateInput {
+input TechnoUpdateInput {
   name: String
-  posts: PostRelateToManyForUpdateInput
+  content: JSON
+  experiences: ExperienceRelateToManyForUpdateInput
+  image: ImageFieldInput
+  blurhash: String
+  image_40: String
+  image_150: String
+  image_300: String
+  image_600: String
 }
 
-input TagUpdateArgs {
-  where: TagWhereUniqueInput!
-  data: TagUpdateInput!
+input ExperienceRelateToManyForUpdateInput {
+  disconnect: [ExperienceWhereUniqueInput!]
+  set: [ExperienceWhereUniqueInput!]
+  create: [ExperienceCreateInput!]
+  connect: [ExperienceWhereUniqueInput!]
 }
 
-input TagCreateInput {
+input TechnoUpdateArgs {
+  where: TechnoWhereUniqueInput!
+  data: TechnoUpdateInput!
+}
+
+input TechnoCreateInput {
   name: String
-  posts: PostRelateToManyForCreateInput
+  content: JSON
+  experiences: ExperienceRelateToManyForCreateInput
+  image: ImageFieldInput
+  blurhash: String
+  image_40: String
+  image_150: String
+  image_300: String
+  image_600: String
+}
+
+input ExperienceRelateToManyForCreateInput {
+  create: [ExperienceCreateInput!]
+  connect: [ExperienceWhereUniqueInput!]
 }
 
 """
@@ -337,18 +352,18 @@ type Mutation {
   updateUsers(data: [UserUpdateArgs!]!): [User]
   deleteUser(where: UserWhereUniqueInput!): User
   deleteUsers(where: [UserWhereUniqueInput!]!): [User]
-  createPost(data: PostCreateInput!): Post
-  createPosts(data: [PostCreateInput!]!): [Post]
-  updatePost(where: PostWhereUniqueInput!, data: PostUpdateInput!): Post
-  updatePosts(data: [PostUpdateArgs!]!): [Post]
-  deletePost(where: PostWhereUniqueInput!): Post
-  deletePosts(where: [PostWhereUniqueInput!]!): [Post]
-  createTag(data: TagCreateInput!): Tag
-  createTags(data: [TagCreateInput!]!): [Tag]
-  updateTag(where: TagWhereUniqueInput!, data: TagUpdateInput!): Tag
-  updateTags(data: [TagUpdateArgs!]!): [Tag]
-  deleteTag(where: TagWhereUniqueInput!): Tag
-  deleteTags(where: [TagWhereUniqueInput!]!): [Tag]
+  createExperience(data: ExperienceCreateInput!): Experience
+  createExperiences(data: [ExperienceCreateInput!]!): [Experience]
+  updateExperience(where: ExperienceWhereUniqueInput!, data: ExperienceUpdateInput!): Experience
+  updateExperiences(data: [ExperienceUpdateArgs!]!): [Experience]
+  deleteExperience(where: ExperienceWhereUniqueInput!): Experience
+  deleteExperiences(where: [ExperienceWhereUniqueInput!]!): [Experience]
+  createTechno(data: TechnoCreateInput!): Techno
+  createTechnos(data: [TechnoCreateInput!]!): [Techno]
+  updateTechno(where: TechnoWhereUniqueInput!, data: TechnoUpdateInput!): Techno
+  updateTechnos(data: [TechnoUpdateArgs!]!): [Techno]
+  deleteTechno(where: TechnoWhereUniqueInput!): Techno
+  deleteTechnos(where: [TechnoWhereUniqueInput!]!): [Techno]
   endSession: Boolean!
   authenticateUserWithPassword(email: String!, password: String!): UserAuthenticationWithPasswordResult
 }
@@ -368,12 +383,12 @@ type Query {
   users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
   user(where: UserWhereUniqueInput!): User
   usersCount(where: UserWhereInput! = {}): Int
-  posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PostWhereUniqueInput): [Post!]
-  post(where: PostWhereUniqueInput!): Post
-  postsCount(where: PostWhereInput! = {}): Int
-  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
-  tag(where: TagWhereUniqueInput!): Tag
-  tagsCount(where: TagWhereInput! = {}): Int
+  experiences(where: ExperienceWhereInput! = {}, orderBy: [ExperienceOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ExperienceWhereUniqueInput): [Experience!]
+  experience(where: ExperienceWhereUniqueInput!): Experience
+  experiencesCount(where: ExperienceWhereInput! = {}): Int
+  technos(where: TechnoWhereInput! = {}, orderBy: [TechnoOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TechnoWhereUniqueInput): [Techno!]
+  techno(where: TechnoWhereUniqueInput!): Techno
+  technosCount(where: TechnoWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }

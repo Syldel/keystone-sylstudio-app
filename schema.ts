@@ -121,9 +121,9 @@ export const lists: Lists = {
 
       password: password({ validation: { isRequired: true } }),
 
-      // we can use this field to see what Posts this User has authored
-      //   more on that in the Post list below
-      posts: relationship({ ref: 'Post.author', many: true }),
+      // we can use this field to see what Experiences this User has authored
+      //   more on that in the Experience list below
+      // experiences: relationship({ ref: 'Experience.author', many: true }),
 
       createdAt: timestamp({
         // this sets the timestamp to Date.now() when the user is first created
@@ -136,7 +136,7 @@ export const lists: Lists = {
     hooks,
   }),
 
-  Post: list({
+  Experience: list({
     // More about access at https://keystonejs.com/docs/guides/auth-and-access-control
     //access: allowAll,
 
@@ -154,7 +154,7 @@ export const lists: Lists = {
       },
     },
 
-    // this is the fields for our Post list
+    // this is the fields for our Experience list
     fields: {
       title: text({ validation: { isRequired: true } }),
 
@@ -185,10 +185,11 @@ export const lists: Lists = {
         },
       }),
 
-      // with this field, you can set a User as the author for a Post
+      /*
+      // with this field, you can set a User as the author for a Experience
       author: relationship({
         // we could have used 'User', but then the relationship would only be 1-way
-        ref: 'User.posts',
+        ref: 'User.experiences',
 
         // this is some customisations for changing how this will look in the AdminUI
         ui: {
@@ -199,17 +200,18 @@ export const lists: Lists = {
           inlineConnect: true,
         },
 
-        // a Post can only have one author
+        // a Experience can only have one author
         //   this is the default, but we show it here for verbosity
         many: false,
       }),
+      */
 
-      // with this field, you can add some Tags to Posts
-      tags: relationship({
-        // we could have used 'Tag', but then the relationship would only be 1-way
-        ref: 'Tag.posts',
+      // with this field, you can add some Technos to Experiences
+      technos: relationship({
+        // we could have used 'Techno', but then the relationship would only be 1-way
+        ref: 'Techno.experiences',
 
-        // a Post can have many Tags, not just one
+        // a Experience can have many Technos, not just one
         many: true,
 
         // this is some customisations for changing how this will look in the AdminUI
@@ -238,8 +240,8 @@ export const lists: Lists = {
     },
   }),
 
-  // this last list is our Tag list, it only has a name field for now
-  Tag: list({
+  // this last list is our Techno list, it only has a name field for now
+  Techno: list({
     // More about access at https://keystonejs.com/docs/guides/auth-and-access-control
     //access: allowAll,
 
@@ -259,16 +261,43 @@ export const lists: Lists = {
 
     // setting this to isHidden for the user interface prevents this list being visible in the Admin UI
     ui: {
-      isHidden: true,
+      // isHidden: true,
     },
 
-    // this is the fields for our Tag list
+    // this is the fields for our Techno list
     fields: {
       name: text(),
-      // this can be helpful to find out all the Posts associated with a Tag
-      posts: relationship({ ref: 'Post.tags', many: true }),
+
+      // the document field can be used for making rich editable content
+      //   you can find out more at https://keystonejs.com/docs/guides/document-fields
+      content: document({
+        formatting: true,
+        layouts: [
+          [1, 1],
+          [1, 1, 1],
+          [2, 1],
+          [1, 2],
+          [1, 2, 1],
+        ],
+        links: true,
+        dividers: true,
+      }),
+
+      // this can be helpful to find out all the Experiences associated with a Techno
+      experiences: relationship({ ref: 'Experience.technos', many: true }),
+
+      image: image({ storage: 'sylstudio_S3_images' }),
+
+      blurhash: text(),
+
+      image_40: text(),
+      image_150: text(),
+      image_300: text(),
+      image_600: text(),
     },
 
-    hooks,
+    hooks: {
+      ...hooks, ...postHooks
+    },
   }),
 };
