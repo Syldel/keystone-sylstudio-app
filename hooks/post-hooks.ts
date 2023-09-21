@@ -36,18 +36,20 @@ export const postHooks: ListHooks<any> = {
       // VERY IMPORTANT : Need to define sizes here!
       const resizeSizes = [40, 150, 300, 600]; // According schema.ts definitions
 
-      // Delete previous resized images
-      const deleteResizePromises: Promise<any>[] = [];
-      resizeSizes.forEach(size => {
-        if (item[`image_${size}`]) {
-          deleteResizePromises.push(deleteS3File(item[`image_${size}`]));
-        }
-      });
+      if (item) {
+        // Delete previous resized images
+        const deleteResizePromises: Promise<any>[] = [];
+        resizeSizes.forEach(size => {
+          if (item[`image_${size}`]) {
+            deleteResizePromises.push(deleteS3File(item[`image_${size}`]));
+          }
+        });
 
-      try {
-        await Promise.all(deleteResizePromises);
-      } catch (err) {
-        console.error("deleteS3File promise error:", err); // Promise.all has at least one rejection
+        try {
+          await Promise.all(deleteResizePromises);
+        } catch (err) {
+          console.error("deleteS3File promise error:", err); // Promise.all has at least one rejection
+        }
       }
 
       // Create resized images
