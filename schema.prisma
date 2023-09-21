@@ -16,34 +16,42 @@ model User {
   name      String    @default("")
   email     String    @unique @default("")
   password  String
-  posts     Post[]    @relation("Post_author")
   createdAt DateTime? @default(now())
   isAdmin   Boolean   @default(false)
 }
 
-model Post {
-  id              String  @id @default(cuid())
-  title           String  @default("")
-  content         String  @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  author          User?   @relation("Post_author", fields: [authorId], references: [id])
-  authorId        String? @map("author")
-  tags            Tag[]   @relation("Post_tags")
+model Experience {
+  id              String   @id @default(cuid())
+  title           String   @default("")
+  content         String   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  startDate       String   @default("")
+  endDate         String   @default("")
+  technos         Techno[] @relation("Experience_technos")
   image_filesize  Int?
   image_extension String?
   image_width     Int?
   image_height    Int?
   image_id        String?
-  blurhash        String  @default("")
-  image_40        String  @default("")
-  image_150       String  @default("")
-  image_300       String  @default("")
-  image_600       String  @default("")
-
-  @@index([authorId])
+  blurhash        String   @default("")
+  image_40        String   @default("")
+  image_150       String   @default("")
+  image_300       String   @default("")
+  image_600       String   @default("")
 }
 
-model Tag {
-  id    String @id @default(cuid())
-  name  String @default("")
-  posts Post[] @relation("Post_tags")
+model Techno {
+  id              String       @id @default(cuid())
+  name            String       @default("")
+  content         String       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  experiences     Experience[] @relation("Experience_technos")
+  image_filesize  Int?
+  image_extension String?
+  image_width     Int?
+  image_height    Int?
+  image_id        String?
+  blurhash        String       @default("")
+  image_40        String       @default("")
+  image_150       String       @default("")
+  image_300       String       @default("")
+  image_600       String       @default("")
 }
