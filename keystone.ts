@@ -33,6 +33,12 @@ export default withAuth(
         return session?.data?.isAdmin ?? false;
       },
     },
-    storage
+    storage,
+    graphql: {
+      playground: true,
+      apolloConfig: {
+        introspection: true
+      }
+    }
   })
 );
