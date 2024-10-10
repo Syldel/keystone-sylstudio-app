@@ -23,6 +23,7 @@ model User {
 model Experience {
   id              String   @id @default(cuid())
   title           String   @default("")
+  job             String   @default("")
   content         String   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   startDate       String   @default("")
   endDate         String   @default("")

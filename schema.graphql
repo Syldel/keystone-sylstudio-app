@@ -124,6 +124,7 @@ input UserCreateInput {
 type Experience {
   id: ID!
   title: String
+  job: String
   content: Experience_content_Document
   startDate: String
   endDate: String
@@ -167,6 +168,7 @@ input ExperienceWhereInput {
   NOT: [ExperienceWhereInput!]
   id: IDFilter
   title: StringFilter
+  job: StringFilter
   startDate: StringFilter
   endDate: StringFilter
   technos: TechnoManyRelationFilter
@@ -186,6 +188,7 @@ input TechnoManyRelationFilter {
 input ExperienceOrderByInput {
   id: OrderDirection
   title: OrderDirection
+  job: OrderDirection
   startDate: OrderDirection
   endDate: OrderDirection
   blurhash: OrderDirection
@@ -197,6 +200,7 @@ input ExperienceOrderByInput {
 
 input ExperienceUpdateInput {
   title: String
+  job: String
   content: JSON
   startDate: String
   endDate: String
@@ -230,6 +234,7 @@ input ExperienceUpdateArgs {
 
 input ExperienceCreateInput {
   title: String
+  job: String
   content: JSON
   startDate: String
   endDate: String

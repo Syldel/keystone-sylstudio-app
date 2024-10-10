@@ -158,6 +158,8 @@ export const lists: Lists = {
     fields: {
       title: text({ validation: { isRequired: true } }),
 
+      job: text({ validation: { isRequired: true } }),
+
       // the document field can be used for making rich editable content
       //   you can find out more at https://keystonejs.com/docs/guides/document-fields
       content: document({
