@@ -34,7 +34,16 @@ export default withAuth(
       },
     },
     storage,
+    server: {
+      cors: {
+        origin: [process.env.SERVER_CORS_ORIGIN || ''], // Autorise les requêtes venant de ces domaines
+        credentials: true, // Autorise l'envoi de cookies ou d'autres credentials
+      },
+    },
     graphql: {
+      // The CORS configuration to use on the GraphQL API endpoint.
+      // Default: { origin: 'https://studio.apollographql.com', credentials: true }
+      // cors: { origin: '*', credentials: true },
       playground: true,
       apolloConfig: {
         introspection: true
